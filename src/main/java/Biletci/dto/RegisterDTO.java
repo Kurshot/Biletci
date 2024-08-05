@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 @Data
 public class RegisterDTO {
-    // TODO : firstName, lastName, phoneNumber, birthDate validasyonları eklenecek.
 
     @NotBlank(message = "First name cannot be blank")
     @Size(min = 1, max = 30, message = "First name must be between 1 and 30 characters")
