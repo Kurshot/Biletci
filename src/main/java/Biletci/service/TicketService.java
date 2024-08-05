@@ -9,10 +9,7 @@ import Biletci.mapper.CompanyMapper;
 import Biletci.mapper.OccasionMapper;
 import Biletci.mapper.TicketMapper;
 import Biletci.mapper.VoyageMapper;
-import Biletci.model.Company;
-import Biletci.model.Occasion;
-import Biletci.model.Ticket;
-import Biletci.model.Voyage;
+import Biletci.model.*;
 import Biletci.repository.CompanyRepository;
 import Biletci.repository.TicketRepository;
 import Biletci.repository.VoyageRepository;
@@ -104,8 +101,11 @@ public class TicketService {
 
     public boolean deleteTicket(Long id) {
         Optional<Ticket> ticketOptional = ticketRepository.findById(id);
-        if (ticketOptional.isPresent()) {
-            ticketRepository.deleteById(id);
+        if (ticketOptional.isPresent())
+        {
+            Ticket ticket = ticketOptional.get();
+            ticket.setActive(false);
+            ticketRepository.save(ticket);
             return true;
         } else {
             return false;
