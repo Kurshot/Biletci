@@ -60,8 +60,12 @@ public class CompanyService {
     }
 
     public boolean deleteCompany(Long id) {
-        if (companyRepository.existsById(id)) {
-            companyRepository.deleteById(id);
+        Optional<Company> companyOptional = companyRepository.findById(id);
+        if (companyOptional.isPresent())
+        {
+            Company company = companyOptional.get();
+            company.setActive(false);
+            companyRepository.save(company);
             return true;
         } else {
             return false;

@@ -9,6 +9,7 @@ import Biletci.mapper.OccasionMapper;
 import Biletci.model.Company;
 import Biletci.model.Occasion;
 import Biletci.model.Occasion;
+import Biletci.model.User;
 import Biletci.repository.OccasionRepository;
 import Biletci.repository.OccasionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +83,12 @@ public class OccasionService {
     }
 
     public boolean deleteOccasion(Long id) {
-        if (occasionRepository.existsById(id)) {
-            occasionRepository.deleteById(id);
+        Optional<Occasion> occasionOptional = occasionRepository.findById(id);
+        if (occasionOptional.isPresent())
+        {
+            Occasion occasion = occasionOptional.get();
+            occasion.setActive(false);
+            occasionRepository.save(occasion);
             return true;
         } else {
             return false;

@@ -6,6 +6,7 @@ import Biletci.enums.ResultMapping;
 import Biletci.mapper.CompanyMapper;
 import Biletci.mapper.VoyageMapper;
 import Biletci.model.Company;
+import Biletci.model.User;
 import Biletci.model.Voyage;
 import Biletci.repository.VoyageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +80,13 @@ public class VoyageService {
     }
 
     public boolean deleteVoyage(Long id) {
-        if (voyageRepository.existsById(id)) {
-            voyageRepository.deleteById(id);
+
+        Optional<Voyage> voyageOptional = voyageRepository.findById(id);
+        if (voyageOptional.isPresent())
+        {
+            Voyage voyage = voyageOptional.get();
+            voyage.setActive(false);
+            voyageRepository.save(voyage)   ;
             return true;
         } else {
             return false;
