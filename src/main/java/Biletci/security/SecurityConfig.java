@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz ->
                         authz
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated() // Diğer tüm istekler için kimlik doğrulama gerektir
                 )
                 .httpBasic(withDefaults()); // HTTP Basic Authentication'ı etkinleştir

@@ -1,33 +1,39 @@
 package Biletci.model;
 
 import Biletci.enums.City;
-import Biletci.enums.VoyageType;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
 @Table(name="voyages")
 public class Voyage extends BaseEntity{
 
-    @Enumerated(EnumType.STRING)
-    private City departureCity;
+    private String name;
 
-    @Enumerated(EnumType.STRING)
-    private City arrivalCity;
+    @ManyToOne
+    private Vehicle vehicle;
 
-    private LocalDate date;
-    private String time;
+    @OneToMany
+    private List<Seat> seats;
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
-    private Company voyageCompany;
+    private Company company; // Seferi düzenleyen firma
 
     @Enumerated(EnumType.STRING)
-    private VoyageType voyageType;
+    private City departureCity; // Kalkış şehri
 
-    private double price;
+    @Enumerated(EnumType.STRING)
+    private City arrivalCity; // Varış şehri
+
+    private LocalDate date; // Tarih
+
+    private String time; // Saat
+
+    private double price; // Fiyat
 }
 

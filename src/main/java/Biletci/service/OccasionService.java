@@ -54,12 +54,12 @@ public class OccasionService {
     }
 
     public OccasionDTO createOccasion(OccasionDTO occasionDTO) {
-        CompanyDTO companyDTO = companyService.getCompanyById(occasionDTO.getOccasionCompany().getId());
+        CompanyDTO companyDTO = companyService.getCompanyById(occasionDTO.getCompany().getId());
         Company company = companyMapper.toEntity(companyDTO);
 
         if (company != null) {
             Occasion occasion = occasionMapper.toEntity(occasionDTO);
-            occasion.setOccasionCompany(company);
+            occasion.setCompany(company);
 
             Occasion savedOccasion = occasionRepository.save(occasion);
             OccasionDTO savedOccasionDTO = occasionMapper.toDTO(savedOccasion);

@@ -50,26 +50,13 @@ public class UserService {
 
     // Create User
     public UserDTO createUser(UserDTO userDTO) {
+        userDTO.setCreateDate(LocalDateTime.now());
         User user = userMapper.toEntity(userDTO);
+        user.setRole(UserRole.USER);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreateDate(LocalDateTime.now());
         user = userRepository.save(user);
         return userMapper.toDTO(user);
-    }
-
-    // TODO : RegisterMapper
-
-    // Create User By Register
-    public void createUser(RegisterDTO registerDTO){
-        User user = new User();
-        user.setEmail(registerDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        user.setRole(UserRole.USER);
-        user.setCreatedBy("register");
-        user.setCreateDate(LocalDateTime.now());
-        user.setBirthDate(registerDTO.getBirthDate());
-        user.setFirstName(registerDTO.getFirstName());
-        user.setLastName(registerDTO.getLastName());
-        user.setPhoneNumber(registerDTO.getPhoneNumber());
-        userRepository.save(user);
     }
 
     // Update User

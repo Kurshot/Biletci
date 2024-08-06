@@ -6,11 +6,13 @@ import lombok.Data;
 import org.springframework.context.annotation.Lazy;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
 @Table(name="occasions")
 public class Occasion extends BaseEntity{
+
 
     private String name;
     private String description;
@@ -19,12 +21,19 @@ public class Occasion extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private City eventCity;
 
+    @OneToMany
+    private List<Seat> seats;
+
+
+    @ManyToOne
+    private OccasionPlace occasionPlace;
+
+
     @ManyToOne
     @JoinColumn(name = "company_id")
     @Lazy
-    private Company occasionCompany;
+    private Company company;
 
-    private String fullAddress;
     private LocalDate date;
     private String time;
     private double price;

@@ -51,12 +51,12 @@ public class VoyageService {
     }
 
     public VoyageDTO createVoyage(VoyageDTO voyageDTO) {
-        CompanyDTO companyDTO = companyService.getCompanyById(voyageDTO.getVoyageCompany().getId());
+        CompanyDTO companyDTO = companyService.getCompanyById(voyageDTO.getCompany().getId());
         Company company = companyMapper.toEntity(companyDTO);
 
         if (company != null) {
             Voyage voyage = voyageMapper.toEntity(voyageDTO);
-            voyage.setVoyageCompany(company);
+            voyage.setCompany(company);
 
             Voyage savedVoyage = voyageRepository.save(voyage);
             VoyageDTO savedVoyageDTO = voyageMapper.toDTO(savedVoyage);

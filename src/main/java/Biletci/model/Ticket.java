@@ -1,5 +1,6 @@
 package Biletci.model;
 
+import Biletci.enums.City;
 import Biletci.enums.TicketStatus;
 import Biletci.enums.TicketType;
 import jakarta.persistence.*;
@@ -9,21 +10,16 @@ import lombok.Data;
 @Entity
 public class Ticket extends BaseEntity{
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User ticketHolder;
+    private String name;
+    private Long seatNumber;
+    private City arrivalCity;
+    private City departureCity;
+    private String companyName;
 
     @Enumerated(EnumType.STRING)
-    private TicketStatus ticketStatus;
+    private TicketStatus ticketStatus; // PURCHASED - CANCELED - USED
 
     @Enumerated(EnumType.STRING)
-    private TicketType ticketType;
+    private TicketType ticketType; // VOYAGE - OCCASION
 
-    @ManyToOne
-    @JoinColumn(name = "voyage_id", nullable = true)
-    private Voyage ticketVoyage;
-
-    @ManyToOne
-    @JoinColumn(name = "occasion_id", nullable = true)
-    private Occasion ticketOccasion;
 }

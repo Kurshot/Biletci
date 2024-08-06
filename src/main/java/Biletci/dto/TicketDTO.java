@@ -10,14 +10,9 @@ import lombok.Data;
 
 @Data
 public class TicketDTO extends BaseDTO{
-    private UserDTO ticketHolder;
     private TicketStatus ticketStatus;
     private TicketType ticketType;
-
-    private Long relatedId;
-
     private VoyageDTO ticketVoyage;
     private OccasionDTO ticketOccasion;
 }
 
-// DTO

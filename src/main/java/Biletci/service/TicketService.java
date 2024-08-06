@@ -85,8 +85,6 @@ public class TicketService {
             return null;
     }
 
-
-
     public TicketDTO updateTicket(TicketDTO ticketDTO) {
         Optional<Ticket> ticketOptional = ticketRepository.findById(ticketDTO.getId());
         if (ticketOptional.isPresent()) {

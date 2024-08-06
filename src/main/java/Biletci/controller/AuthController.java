@@ -6,6 +6,7 @@ import Biletci.dto.RegisterDTO;
 import Biletci.dto.UserDTO;
 import Biletci.enums.ResultMapping;
 import Biletci.enums.UserRole;
+import Biletci.mapper.UserMapper;
 import Biletci.model.User;
 import Biletci.repository.UserRepository;
 import Biletci.security.JWTGenerator;
@@ -39,15 +40,18 @@ public class AuthController {
 
     private UserService userService;
 
+    private UserMapper userMapper;
+
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, UserRepository userRepository
-    , JWTGenerator jwtGenerator, UserService userService) {
+    , JWTGenerator jwtGenerator, UserService userService, UserMapper userMapper) {
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.jwtGenerator = jwtGenerator;
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
 
@@ -67,7 +71,8 @@ public class AuthController {
         if(userRepository.existsByEmail(registerDTO.getEmail())){
             return new GenericServiceResult(ResultMapping.ERROR_FIELD, "Email is already in use");
         }
-        userService.createUser(registerDTO);
+        UserDTO userDTO = userMapper.registerDTOtoUserDTO(registerDTO); // RegisterDTO -> UserDTO
+        userService.createUser(userDTO);
         return new GenericServiceResult(ResultMapping.CREATED, "Registered successfully.");
     }
 }
