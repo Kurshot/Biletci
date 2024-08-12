@@ -8,10 +8,10 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Ticket extends BaseEntity{
+public class Ticket extends BaseEntity {
 
     private String name;
-    private Long seatNumber;
+    private int seatNumber;
     private City arrivalCity;
     private City departureCity;
     private String companyName;
@@ -22,4 +22,9 @@ public class Ticket extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private TicketType ticketType; // VOYAGE - OCCASION
 
+    private Long voId; // Voyage or Occasion ID
+
+    @ManyToOne
+    @JoinColumn(name = "ticket_holder_id") // Optional: specify the column name in the database
+    private TicketHolder ticketHolder;
 }

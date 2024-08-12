@@ -29,7 +29,7 @@ public class RegisterDTO {
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Invalid phone number")
     private String phoneNumber;
 
-    @Past(message = "Birth date must be in the past")
+    @Past(message = "Birth date is not valid")
     @Adult
     private LocalDate birthDate;
 

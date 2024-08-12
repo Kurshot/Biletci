@@ -20,6 +20,8 @@ public class Voyage extends BaseEntity{
     @OneToMany
     private List<Seat> seats;
 
+    private int emptySeatCount;
+
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
     private Company company; // Seferi düzenleyen firma

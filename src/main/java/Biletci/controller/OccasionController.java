@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/occasions")
+@RequestMapping("/occasion")
 public class OccasionController {
 
     @Autowired

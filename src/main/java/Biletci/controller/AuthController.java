@@ -68,11 +68,8 @@ public class AuthController {
 
     @PostMapping("register")
     public GenericServiceResult register(@Valid @RequestBody RegisterDTO registerDTO) {
-        if(userRepository.existsByEmail(registerDTO.getEmail())){
-            return new GenericServiceResult(ResultMapping.ERROR_FIELD, "Email is already in use");
-        }
         UserDTO userDTO = userMapper.registerDTOtoUserDTO(registerDTO); // RegisterDTO -> UserDTO
         userService.createUser(userDTO);
-        return new GenericServiceResult(ResultMapping.CREATED, "Registered successfully.");
+        return new GenericServiceResult(ResultMapping.CREATED, registerDTO);
     }
 }

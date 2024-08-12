@@ -37,6 +37,7 @@ public class TicketHolderService {
     }
 
     public TicketHolderDTO createTicketHolder(TicketHolderDTO ticketHolderDTO) {
+
         TicketHolder ticketHolder = ticketHolderMapper.toEntity(ticketHolderDTO);
         ticketHolder = ticketHolderRepository.save(ticketHolder);
         return ticketHolderMapper.toDTO(ticketHolder);

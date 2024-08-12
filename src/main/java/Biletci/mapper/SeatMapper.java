@@ -6,6 +6,6 @@ import Biletci.model.Seat;
 import Biletci.model.TicketHolder;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", uses = {TicketHolder.class, OccasionPlace.class})
+@Mapper(componentModel = "spring", uses = {TicketHolderMapper.class, OccasionPlaceMapper.class})
 public interface SeatMapper extends BaseMapper<Seat, SeatDTO>{
 }

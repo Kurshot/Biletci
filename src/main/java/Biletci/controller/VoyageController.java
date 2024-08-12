@@ -6,15 +6,17 @@ import Biletci.enums.ResultMapping;
 import Biletci.model.Voyage;
 import Biletci.service.GenericServiceResult;
 import Biletci.service.VoyageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/voyages")
+@RequestMapping("/voyage")
 public class VoyageController {
 
+    @Autowired
     private VoyageService voyageService;
 
     @GetMapping
@@ -37,7 +39,7 @@ public class VoyageController {
     @PostMapping
     public GenericServiceResult createVoyage(@RequestBody VoyageDTO voyageDTO) {
         VoyageDTO result = voyageService.createVoyage(voyageDTO);
-        return new GenericServiceResult(ResultMapping.CREATED, voyageDTO);
+        return new GenericServiceResult(ResultMapping.CREATED, result);
     }
 
     @PutMapping

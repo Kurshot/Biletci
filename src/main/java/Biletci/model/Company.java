@@ -14,7 +14,5 @@ public class Company extends BaseEntity{
     private String companyLogo;
     private String companyPhone;
 
-
-
 }
 

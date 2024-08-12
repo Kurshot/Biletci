@@ -1,21 +1,19 @@
 package Biletci.service;
 
-import Biletci.dto.CompanyDTO;
-import Biletci.dto.OccasionDTO;
-import Biletci.dto.TicketDTO;
-import Biletci.dto.VoyageDTO;
+import Biletci.dto.*;
 import Biletci.enums.ResultMapping;
-import Biletci.mapper.CompanyMapper;
-import Biletci.mapper.OccasionMapper;
-import Biletci.mapper.TicketMapper;
-import Biletci.mapper.VoyageMapper;
+import Biletci.mapper.*;
 import Biletci.model.*;
-import Biletci.repository.CompanyRepository;
-import Biletci.repository.TicketRepository;
-import Biletci.repository.VoyageRepository;
+import Biletci.repository.*;
+import org.hibernate.annotations.ColumnTransformers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +41,22 @@ public class TicketService {
     @Autowired
     private OccasionMapper occasionMapper;
 
+    @Autowired
+    private TicketHolderService ticketHolderService;
+
+    @Autowired
+    private TicketHolderMapper ticketHolderMapper;
+
+    @Autowired
+    private SeatMapper seatMapper;
+
+    @Autowired
+    private TicketHolderRepository ticketHolderRepository;
+    @Autowired
+    private SeatRepository seatRepository;
+    @Autowired
+    private VoyageRepository voyageRepository;
+
     public TicketDTO getTicketById(Long id) {
         Optional<Ticket> ticketOptional = ticketRepository.findById(id);
         if (ticketOptional.isPresent()) {
@@ -59,31 +73,103 @@ public class TicketService {
         return ticketDTOs;
     }
 
-    /* TODO : == yerine equals kullan +
-        null gerek yok +
-        voyage occasion kontrolünü farklı metotta yap ?
-    */
+    public TicketDTO createTicket(TicketDTO ticketDTO) {
+        // Veritabanı nesneleri için gerekli servis çağrıları yapılacak
+        if (ticketDTO.getTicketType().equals(VOYAGE)) {
+            VoyageDTO voyageDTO = Optional.ofNullable(voyageService.getVoyageById(ticketDTO.getVoId()))
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voyage does not exist"));
 
-    public TicketDTO createTicket(TicketDTO ticketDTO, Long paramId) {
-        Ticket ticket;
+            if (voyageDTO.getEmptySeatCount() == 0) // Yer yoksa
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No empty seats available on this voyage");
 
-        if(ticketDTO.getTicketType().equals(VOYAGE)){
-            VoyageDTO voyageDTO = voyageService.getVoyageById(paramId);
-            ticketDTO.setTicketVoyage(voyageDTO);
-            ticket = ticketMapper.toEntity(ticketDTO);
+            // Ticket nesnesini oluştur ve ilişkilendir
+            Ticket ticket = ticketMapper.toEntity(ticketDTO);
+            ticket.setVoId(voyageDTO.getId()); // Voyage ilişkisini ekle
             ticketRepository.save(ticket);
+
+            int seatNumber = ticketDTO.getSeatNumber();
+            voyageDTO.setEmptySeatCount(voyageDTO.getEmptySeatCount() - 1); // Koltuk sayısını güncelle
+
+            // TicketHolder ilişkisini yönet
+            TicketHolderDTO ticketHolderDTO = ticketHolderMapper.toDTO(ticket.getTicketHolder());
+            if (ticketHolderDTO.getTickets() == null) // Null ise boş liste ata
+                ticketHolderDTO.setTickets(new ArrayList<>());
+
+            ticketHolderDTO.getTickets().add(ticketDTO); // Ticket holder'a ticket ekle
+
+            // İlgili koltuğu güncelle
+            SeatDTO seatDTO = voyageService.findSeatByNumber(voyageDTO, seatNumber);
+            seatDTO.setTicketHolder(ticketDTO.getTicketHolder());
+
+            // Veritabanı nesnelerini güncelle
+            ticketHolderRepository.save(ticketHolderMapper.toEntity(ticketHolderDTO));
+            voyageRepository.save(voyageMapper.toEntity(voyageDTO));
+            seatRepository.save(seatMapper.toEntity(seatDTO));
+
             return ticketDTO;
-        }
-        else if(ticketDTO.getTicketType().equals(OCCASION)){
-            OccasionDTO occasionDTO =  occasionService.getOccasionById(paramId);
-            ticketDTO.setTicketOccasion(occasionDTO);
-            ticket = ticketMapper.toEntity(ticketDTO);
-            ticketRepository.save(ticket);
-            return ticketDTO;
-        }
-        else
+        } else if (ticketDTO.getTicketType().equals(OCCASION)) {
+            OccasionDTO occasionDTO = Optional.ofNullable(occasionService.getOccasionById(ticketDTO.getVoId()))
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Occasion does not exist"));
+            // TODO: Occasion düzenlenecek
             return null;
+        } else {
+            return null;
+        }
     }
+
+
+//    @Transactional
+//    public TicketDTO createTicket(TicketDTO ticketDTO) {
+//        Ticket ticket = new Ticket();
+//
+//
+//        if(ticketDTO.getTicketType().equals(VOYAGE)){
+//            VoyageDTO voyageDTO = Optional.ofNullable(voyageService.getVoyageById(ticketDTO.getVoId()))
+//                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voyage does not exist"));
+//
+//            if(voyageService.getVoyageById( ticketDTO.getVoId() ).getEmptySeatCount() == 0) // yer yok ise
+//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No empty seats available on this voyage");
+//            // Yer var ise;
+//
+//            ticket = ticketMapper.toEntity(ticketDTO);
+//            ticketRepository.save(ticket);
+//
+//            // TODO : Çeşitli validasyonlar yapılacak
+//
+//            int seatNumber = ticketDTO.getSeatNumber();
+//
+//
+//            voyageDTO.setEmptySeatCount(voyageDTO.getEmptySeatCount() - 1); // Koltuk sayısı 1 düştü.
+//
+//            // TODO : TicketHolder FE'den gelen verilerle olusturulacak. Şimdilik db'de var olanlar üzerinden test ediyorum.
+//
+//            TicketHolderDTO ticketHolderDTO = ticketHolderMapper.toDTO(ticket.getTicketHolder());
+//            if(ticketHolderDTO.getTickets() == null) // Null ise boş liste ata.
+//                ticketHolderDTO.setTickets(new ArrayList<>());
+//
+//            ticketHolderDTO.getTickets().add(ticketDTO); // Ticket holder' a ticket atandı.
+//
+//
+//            SeatDTO seatDTO = voyageService.findSeatByNumber(voyageDTO, seatNumber); // Voyage'daki ilgili seat'e TicketHolder atanacak.
+//            seatDTO.setTicketHolder(ticketDTO.getTicketHolder());
+//
+//            ticketHolderRepository.save(ticketHolderMapper.toEntity(ticketHolderDTO));
+//            voyageRepository.save(voyageMapper.toEntity(voyageDTO));
+//            seatRepository.save(seatMapper.toEntity(seatDTO));
+//            return ticketDTO;
+//        }
+//
+//        // TODO : Occ düzenlenecek.
+//
+//        else if(ticketDTO.getTicketType().equals(OCCASION)){
+//            OccasionDTO occasionDTO = Optional.ofNullable(occasionService.getOccasionById(ticketDTO.getVoId()))
+//                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Occasion does not exist"));
+//            return null;
+//
+//        }
+//        else
+//            return null;
+//    }
 
     public TicketDTO updateTicket(TicketDTO ticketDTO) {
         Optional<Ticket> ticketOptional = ticketRepository.findById(ticketDTO.getId());

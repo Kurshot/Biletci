@@ -8,8 +8,12 @@ import Biletci.mapper.UserMapper;
 import Biletci.model.User;
 import Biletci.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.w3c.dom.html.HTMLTableCaptionElement;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,6 +54,9 @@ public class UserService {
 
     // Create User
     public UserDTO createUser(UserDTO userDTO) {
+        if(userRepository.existsByEmail(userDTO.getEmail())) {
+             throw new ResponseStatusException(HttpStatusCode.valueOf(410), "Email already exists.");
+        }
         userDTO.setCreateDate(LocalDateTime.now());
         User user = userMapper.toEntity(userDTO);
         user.setRole(UserRole.USER);

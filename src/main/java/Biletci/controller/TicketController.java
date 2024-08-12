@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@RequestMapping("/tickets")
+@RequestMapping("/ticket")
 public class TicketController {
 
     @Autowired
@@ -36,9 +36,9 @@ public class TicketController {
         }
     }
 
-    @PostMapping("/{paramId}")
-    public GenericServiceResult createTicket(@RequestBody TicketDTO ticketDTO, @PathVariable Long paramId) {
-        TicketDTO result = ticketService.createTicket(ticketDTO, paramId);
+    @PostMapping
+    public GenericServiceResult createTicket(@RequestBody TicketDTO ticketDTO) {
+        TicketDTO result = ticketService.createTicket(ticketDTO);
         return new GenericServiceResult(ResultMapping.CREATED, result);
     }
 

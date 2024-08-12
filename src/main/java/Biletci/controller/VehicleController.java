@@ -3,15 +3,17 @@ package Biletci.controller;
 
 import Biletci.dto.VehicleDTO;
 import Biletci.enums.ResultMapping;
+import Biletci.enums.VehicleType;
 import Biletci.service.GenericServiceResult;
 import Biletci.service.VehicleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/vehicles")
+@RequestMapping("/vehicle")
 public class VehicleController {
 
     @Autowired
@@ -34,7 +36,7 @@ public class VehicleController {
     }
 
     @PostMapping
-    public GenericServiceResult createVehicle(@RequestBody VehicleDTO vehicleDTO) {
+    public GenericServiceResult createVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
         VehicleDTO result = vehicleService.createVehicle(vehicleDTO);
         return new GenericServiceResult(ResultMapping.CREATED, result);
     }
