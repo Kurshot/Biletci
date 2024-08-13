@@ -1,5 +1,6 @@
 package Biletci.mapper;
 
+import Biletci.dto.LoginDTO;
 import Biletci.dto.RegisterDTO;
 import Biletci.dto.UserDTO;
 import Biletci.model.User;
@@ -12,4 +13,5 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User, UserDTO> {
 
     UserDTO registerDTOtoUserDTO(RegisterDTO registerDTO);
+    UserDTO loginDTOtoUserDTO(LoginDTO loginDTO);
 }

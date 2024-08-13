@@ -41,15 +41,13 @@ public class VoyageService {
 
     @Autowired
     private VehicleMapper vehicleMapper;
+
     @Autowired
     private SeatRepository seatRepository;
 
     public List<VoyageDTO> getAllVoyages() {
         List<Voyage> voyages = voyageRepository.findAll();
-        List<VoyageDTO> voyageDTOs = voyages.stream()
-                .map(voyageMapper::toDTO)
-                .collect(Collectors.toList());
-        return voyageDTOs;
+        return voyageMapper.toDTOList(voyages);
     }
 
     public VoyageDTO getVoyageById(Long id) {

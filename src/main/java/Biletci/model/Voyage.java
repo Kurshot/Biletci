@@ -3,6 +3,7 @@ package Biletci.model;
 import Biletci.enums.City;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,15 +15,15 @@ public class Voyage extends BaseEntity{
 
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Vehicle vehicle;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Seat> seats;
 
     private int emptySeatCount;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company; // Seferi düzenleyen firma
 
@@ -37,5 +38,7 @@ public class Voyage extends BaseEntity{
     private String time; // Saat
 
     private double price; // Fiyat
+
+
 }
 

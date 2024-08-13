@@ -6,6 +6,7 @@ import Biletci.enums.TicketType;
 import Biletci.model.Occasion;
 import Biletci.model.User;
 import Biletci.model.Voyage;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 

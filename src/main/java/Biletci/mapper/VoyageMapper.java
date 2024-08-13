@@ -9,9 +9,9 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 
-@Mapper(componentModel = "spring", uses = {CompanyMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyMapper.class, VehicleMapper.class,
+SeatMapper.class})
 public interface VoyageMapper extends BaseMapper<Voyage, VoyageDTO> {
-
 
 
 }

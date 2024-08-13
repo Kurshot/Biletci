@@ -41,7 +41,7 @@ public class CompanyController {
         return new GenericServiceResult(ResultMapping.CREATED,companyDTO);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public GenericServiceResult updateCompany(@RequestBody CompanyDTO companyDTO) {
         CompanyDTO result = companyService.updateCompany(companyDTO);
         if (result == null) {

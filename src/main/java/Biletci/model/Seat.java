@@ -1,6 +1,7 @@
 package Biletci.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
@@ -10,12 +11,13 @@ public class Seat extends BaseEntity{
 
     private int seatNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+
     private TicketHolder ticketHolder;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Vehicle vehicle;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private OccasionPlace occasionPlace;
 }

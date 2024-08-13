@@ -3,6 +3,7 @@ package Biletci.model;
 import Biletci.enums.City;
 import Biletci.enums.TicketStatus;
 import Biletci.enums.TicketType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,7 +25,7 @@ public class Ticket extends BaseEntity {
 
     private Long voId; // Voyage or Occasion ID
 
-    @ManyToOne
-    @JoinColumn(name = "ticket_holder_id") // Optional: specify the column name in the database
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_holder_id")
     private TicketHolder ticketHolder;
 }

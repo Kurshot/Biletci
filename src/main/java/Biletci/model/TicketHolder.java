@@ -1,7 +1,9 @@
 package Biletci.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
@@ -18,6 +20,7 @@ public class TicketHolder extends BaseEntity{
     private String phoneNumber;
     private String mailAddress;
 
-    @OneToMany(mappedBy = "ticketHolder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ticketHolder", cascade = CascadeType.ALL, orphanRemoval = true,
+    fetch = FetchType.LAZY)
     private List<Ticket> tickets = new ArrayList<>();
 }
