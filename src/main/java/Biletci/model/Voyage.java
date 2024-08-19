@@ -38,7 +38,5 @@ public class Voyage extends BaseEntity{
     private String time; // Saat
 
     private double price; // Fiyat
-
-
 }
 

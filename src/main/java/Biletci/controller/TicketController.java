@@ -1,14 +1,12 @@
 package Biletci.controller;
 
 import Biletci.dto.TicketDTO;
-import Biletci.dto.TicketDTO;
+import Biletci.dto.PurchaseTicketDTO;
+import Biletci.dto.TicketWithTicketHolderDTO;
 import Biletci.enums.ResultMapping;
 import Biletci.service.GenericServiceResult;
 import Biletci.service.TicketService;
-import Biletci.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +35,8 @@ public class TicketController {
     }
 
     @PostMapping
-    public GenericServiceResult createTicket(@RequestBody TicketDTO ticketDTO) {
-        TicketDTO result = ticketService.createTicket(ticketDTO);
+    public GenericServiceResult createTicket(@RequestBody PurchaseTicketDTO purchaseTicketDTO) {
+        TicketWithTicketHolderDTO result = ticketService.createTicket(purchaseTicketDTO);
         return new GenericServiceResult(ResultMapping.CREATED, result);
     }
 

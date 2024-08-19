@@ -29,5 +29,6 @@ public class TicketHolderDTO extends BaseDTO{
 
     @Email(message = "Email should be valid or blank")
     private String mailAddress;
+
     private List<TicketDTO> tickets;
 }

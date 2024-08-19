@@ -3,15 +3,12 @@ package Biletci.dto;
 import Biletci.enums.City;
 import Biletci.enums.TicketStatus;
 import Biletci.enums.TicketType;
-import Biletci.model.Occasion;
-import Biletci.model.User;
-import Biletci.model.Voyage;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 import lombok.Data;
 
-
 @Data
-public class TicketDTO extends BaseDTO{
+public class TicketWithTicketHolderDTO extends BaseDTO{
     private String name;
     private int seatNumber;
     private City arrivalCity;
@@ -20,5 +17,5 @@ public class TicketDTO extends BaseDTO{
     private TicketStatus ticketStatus;
     private TicketType ticketType;
     private Long voId;
+    private TicketHolderDTO ticketHolder;
 }
-

@@ -2,13 +2,17 @@ package Biletci.controller;
 
 import Biletci.dto.UserDTO;
 import Biletci.dto.VoyageDTO;
+import Biletci.enums.City;
 import Biletci.enums.ResultMapping;
+import Biletci.enums.VehicleType;
 import Biletci.model.Voyage;
 import Biletci.service.GenericServiceResult;
 import Biletci.service.VoyageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -24,6 +28,29 @@ public class VoyageController {
         List<VoyageDTO> result = voyageService.getAllVoyages();
         return new GenericServiceResult(ResultMapping.SUCCESS, result);
     }
+
+//    @GetMapping("/search")
+//    public ResponseEntity<List<VoyageDTO>> getVoyagesByCriteria(
+//            @RequestParam String departureCity,
+//            @RequestParam String arrivalCity,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+//
+//        List<VoyageDTO> voyages = voyageService.findVoyages(departureCity, arrivalCity, date);
+//        return ResponseEntity.ok(voyages);
+//    }
+
+    @GetMapping("/search")
+    public GenericServiceResult getVoyagesBySearch(
+            @RequestParam VehicleType vehicleType,
+            @RequestParam City departureCity,
+            @RequestParam City arrivalCity,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+
+        List<VoyageDTO> result = voyageService.getVoyagesBySearch(vehicleType, departureCity, arrivalCity, date);
+        return new GenericServiceResult(ResultMapping.SUCCESS, result);
+    }
+
+
 
     @GetMapping("/{id}")
     public GenericServiceResult getVoyageById(@PathVariable Long id) {

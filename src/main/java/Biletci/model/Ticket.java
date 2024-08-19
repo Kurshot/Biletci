@@ -4,6 +4,7 @@ import Biletci.enums.City;
 import Biletci.enums.TicketStatus;
 import Biletci.enums.TicketType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,5 +28,6 @@ public class Ticket extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_holder_id")
+    @JsonIgnore
     private TicketHolder ticketHolder;
 }

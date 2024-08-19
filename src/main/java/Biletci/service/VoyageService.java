@@ -4,7 +4,9 @@ import Biletci.dto.CompanyDTO;
 import Biletci.dto.SeatDTO;
 import Biletci.dto.VehicleDTO;
 import Biletci.dto.VoyageDTO;
+import Biletci.enums.City;
 import Biletci.enums.ResultMapping;
+import Biletci.enums.VehicleType;
 import Biletci.mapper.CompanyMapper;
 import Biletci.mapper.VehicleMapper;
 import Biletci.mapper.VoyageMapper;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
@@ -60,7 +63,14 @@ public class VoyageService {
         }
     }
 
+    public List<VoyageDTO> getVoyagesBySearch(VehicleType vehicleType, City departureCity, City arrivalCity, LocalDate date){
+        List<Voyage> result = voyageRepository.findByVehicle_VehicleTypeAndDepartureCityAndArrivalCityAndDate(
+                vehicleType, departureCity, arrivalCity, date);
+        return voyageMapper.toDTOList(result);
+    }
+
     public VoyageDTO createVoyage(VoyageDTO voyageDTO) {
+        System.out.println(voyageDTO);
         CompanyDTO companyDTO = Optional.ofNullable(companyService.getCompanyById(voyageDTO.getCompany().getId()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Company does not exist"));
 
@@ -78,6 +88,7 @@ public class VoyageService {
         // Create Seat List
 
         List<Seat> seats = new ArrayList<>();
+
         for(int i = 1; i <= voyage.getVehicle().getCapacity(); i++){
             Seat seat = new Seat();
             seat.setSeatNumber(i); // Seat Number
@@ -116,6 +127,8 @@ public class VoyageService {
         }
     }
 
+    // TODO : Voyage silindiğinde ilgili seat'ler de silinecek.
+
     public boolean deleteVoyage(Long id) {
 
         Optional<Voyage> voyageOptional = voyageRepository.findById(id);
@@ -123,7 +136,12 @@ public class VoyageService {
         {
             Voyage voyage = voyageOptional.get();
             voyage.setActive(false);
-            voyageRepository.save(voyage)   ;
+            List<Seat> seats = voyage.getSeats();
+            for(Seat seat : seats){
+                seat.setActive(false);
+                seatRepository.save(seat);
+            }
+            voyageRepository.save(voyage);
             return true;
         } else {
             return false;
